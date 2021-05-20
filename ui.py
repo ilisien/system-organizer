@@ -1,7 +1,8 @@
-import curses,numpy,time
+import curses,numpy,time,glob,os
 from tree import Tree
 
-def which(root,list,x,y,x_ind):
+
+def which(root,list,x,y,x_ind,accept_non_int_outputs=True):
     stdscr.addstr(y,x,root)
     for i in range((len(list))):
         line_y = y + i + 1
@@ -26,12 +27,15 @@ def which(root,list,x,y,x_ind):
                 old_selection = selection
                 selection += 1
 
-        if c == curses.KEY_LEFT:
+        if (c == curses.KEY_LEFT) and (accept_non_int_outputs == True):
             return -1
 
         if c == curses.KEY_RIGHT:
             return selection
 
+        if c == ord('q'):
+            return 'q'
+                
         stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
         stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
         stdscr.refresh()
@@ -44,9 +48,40 @@ if __name__ == "__main__":
     curses.cbreak()
     stdscr.keypad(True)
     curses.curs_set(0)
+    
 
-    which("title:",["a","b","c"],0,0,2)
-    time.sleep(10)
+    saves = glob.glob("saves/*.save")
+
+    tree = Tree(saves[which("Which save do you want to load?",saves,0,0,5,False)])
+
+    stdscr.clear()
+    stdscr.refresh()
+    
+    node = 0
+    while True:
+        parent = -1
+        children = tree.node_dict[node][2]
+        children_names = []
+        for child in children:
+            children_names.append(tree.node_dict[child][0])
+
+        for key in tree.node_dict.keys():
+            for i in tree.node_dict[key][2]:
+                if i == node:
+                    parent = key
+        
+        ipt = which(tree.node_dict[node][0],children_names,0,0,2)
+
+        if ipt == 'q':
+            break
+        if ipt == -1:
+            if parent != -1:
+                node = parent
+        else:
+            if children != []:
+                node = children[ipt]
+        stdscr.clear()
+        stdscr.refresh()
 
     curses.nocbreak()
     stdscr.keypad(False)
