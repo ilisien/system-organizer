@@ -8,7 +8,7 @@ def which(root,list,x,y,x_ind):
         stdscr.addstr(line_y,x+x_ind,list[i])
     stdscr.refresh()
     selection = 0
-    old_selection = 1
+    old_selection = 0
     while True:
         c = stdscr.getch()
 
@@ -32,10 +32,9 @@ def which(root,list,x,y,x_ind):
         if c == curses.KEY_RIGHT:
             return selection
 
-        if old_selection != selection:
-            stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
-            stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
-            stdscr.refresh()
+        stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
+        stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
+        stdscr.refresh()
 
 
 
