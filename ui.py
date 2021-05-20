@@ -35,10 +35,11 @@ def which(root,list,x,y,x_ind,accept_non_int_outputs=True):
 
         if c == ord('q'):
             return 'q'
-                
-        stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
-        stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
-        stdscr.refresh()
+        
+        if len(list) != 0:
+            stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
+            stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
+            stdscr.refresh()
 
 
 
@@ -69,17 +70,22 @@ if __name__ == "__main__":
             for i in tree.node_dict[key][2]:
                 if i == node:
                     parent = key
+
+        stdscr.addstr(2+len(children),0,tree.node_dict[node][1]) 
         
         ipt = which(tree.node_dict[node][0],children_names,0,0,2)
 
         if ipt == 'q':
             break
+
         if ipt == -1:
             if parent != -1:
                 node = parent
+
         else:
             if children != []:
-                node = children[ipt]
+                node = children[ipt]      
+
         stdscr.clear()
         stdscr.refresh()
 
