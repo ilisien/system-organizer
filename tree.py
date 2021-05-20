@@ -1,8 +1,8 @@
 import numpy as np
 
 class Tree:
-    def __init__(self,name):
-        self.file = open("{}.save".format(name))
+    def __init__(self,filename):
+        self.file = open("{}.save".format(filename))
         self.node_dict = {}
         for node in self.file.readlines():
             parameter = node.strip().split(",")
@@ -42,7 +42,7 @@ class Tree:
             save.writelines(new_lines)
 
 if __name__ == "__main__":
-    a = Tree("test")
+    a = Tree("saves/test")
     a.node(1,name="child1")
     print(a.node_dict)
-    a.close(save="test")
+    a.close(save="saves/test")
