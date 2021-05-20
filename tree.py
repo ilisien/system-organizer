@@ -2,7 +2,7 @@ import numpy as np
 
 class Tree:
     def __init__(self,filename):
-        self.file = open("{}.save".format(filename))
+        self.file = open("{}".format(filename))
         self.node_dict = {}
         for node in self.file.readlines():
             parameter = node.strip().split(",")
@@ -31,7 +31,7 @@ class Tree:
         new_lines = []
         new_line = ""
         if save != None:
-            save = open("{}.save".format(save),"w")
+            save = open("{}".format(save),"w")
             for key in self.node_dict.keys():
                 new_line = "{},{},{}".format(key,self.node_dict[key][0],self.node_dict[key][1])
                 if self.node_dict[key][2] != []:
@@ -42,7 +42,7 @@ class Tree:
             save.writelines(new_lines)
 
 if __name__ == "__main__":
-    a = Tree("saves/test")
+    a = Tree("saves/test.save")
     a.node(1,name="child1")
     print(a.node_dict)
-    a.close(save="saves/test")
+    a.close(save="saves/test.save")
