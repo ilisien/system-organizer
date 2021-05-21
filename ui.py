@@ -11,6 +11,11 @@ def which(root,list,x,y,x_ind,accept_non_int_outputs=True):
     selection = 0
     old_selection = 0
     while True:
+        if len(list) != 0:
+            stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
+            stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
+            stdscr.refresh()
+
         c = stdscr.getch()
 
         if c == curses.KEY_UP:
@@ -35,12 +40,6 @@ def which(root,list,x,y,x_ind,accept_non_int_outputs=True):
 
         if c == ord('q'):
             return 'q'
-        
-        if len(list) != 0:
-            stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
-            stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
-            stdscr.refresh()
-
 
 
 if __name__ == "__main__":
