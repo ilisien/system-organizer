@@ -12,12 +12,15 @@ class Tree:
                 self.node_dict[int(parameter[0])] = [parameter[1],parameter[2],[]]
 
     def node(self,uid,name=None,description=None,children=None):
-        if name == None:
-            name = self.node_dict[uid][0]
-        if description == None:
-            description = self.node_dict[uid][1]
-        if children == None:
-            children = self.node_dict[uid][2]
+        if uid in self.node_dict.keys():
+            if name == None:
+                name = self.node_dict[uid][0]
+            if description == None:
+                description = self.node_dict[uid][1]
+            if children == None:
+                children = self.node_dict[uid][2]
+        else:
+            children = []
         self.node_dict[uid] = [name,description,children]
 
     def move(self,uid,new_parent):
@@ -25,6 +28,13 @@ class Tree:
             if uid in self.node_dict[key][2]:
                 self.node_dict[key][2].remove(uid)
         self.node_dict[new_parent][2].append(uid)
+
+    def delete(self,uid):
+        del self.node_dict[uid]
+        for key in self.node_dict.keys():
+            if uid in self.node_dict[key][2]:
+                self.node_dict[key][2].remove(uid)
+                break
 
     def close(self,save=None):
         self.file.close()
@@ -43,6 +53,9 @@ class Tree:
 
 if __name__ == "__main__":
     a = Tree("saves/test.save")
-    a.node(1,name="child1")
+    a.node(3,name="new_node",description="a new node")
+    a.move(3,1)
+    print(a.node_dict)
+    a.delete(3)
     print(a.node_dict)
     a.close(save="saves/test.save")
