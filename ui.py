@@ -3,20 +3,20 @@ from tree import Tree
 
 
 def which(root,list,x,y,x_ind,accept_non_int_outputs=True):
-    stdscr.addstr(y,x,root)
+    win.addstr(y,x,root)
     for i in range((len(list))):
         line_y = y + i + 1
-        stdscr.addstr(line_y,x+x_ind,list[i])
-    stdscr.refresh()
+        win.addstr(line_y,x+x_ind,list[i])
+    win.refresh()
     selection = 0
     old_selection = 0
     while True:
         if len(list) != 0:
-            stdscr.addstr(y+old_selection+1,x+x_ind,list[old_selection])
-            stdscr.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
-            stdscr.refresh()
+            win.addstr(y+old_selection+1,x+x_ind,list[old_selection])
+            win.addstr(y+selection+1,x+x_ind,list[selection],curses.A_REVERSE)
+            win.refresh()
 
-        c = stdscr.getch()
+        c = win.getch()
 
         if c == curses.KEY_UP:
             if selection == 0:
@@ -40,13 +40,24 @@ def which(root,list,x,y,x_ind,accept_non_int_outputs=True):
 
         if c == ord('q'):
             return 'q'
+        
+        if c == ord('n'):
+            return 'n'
 
+        if c == ord('e'):
+            return 'e'
+
+        if c == ord('d'):
+            return 'd'
+
+def editMenu(cur_name,cur_description,new):
+    pass
 
 if __name__ == "__main__":
-    stdscr = curses.initscr()
+    win = curses.initscr()
     curses.noecho()
     curses.cbreak()
-    stdscr.keypad(True)
+    win.keypad(True)
     curses.curs_set(0)
     
 
@@ -54,8 +65,8 @@ if __name__ == "__main__":
 
     tree = Tree(saves[which("Which save do you want to load?",saves,0,0,5,False)])
 
-    stdscr.clear()
-    stdscr.refresh()
+    win.clear()
+    win.refresh()
     
     node = 0
     while True:
@@ -70,25 +81,36 @@ if __name__ == "__main__":
                 if i == node:
                     parent = key
 
-        stdscr.addstr(2+len(children),0,tree.node_dict[node][1]) 
+        win.addstr(2+len(children),0,tree.node_dict[node][1]) 
         
-        ipt = which(tree.node_dict[node][0],children_names,0,0,2)
+        ipt = which(tree.node_dict[node][0],children_names,0,0,2) #get input
 
-        if ipt == 'q':
+        if ipt == 'q': #quit
             break
 
-        if ipt == -1:
-            if parent != -1:
+        elif ipt == 'n': #new
+            pass
+
+        elif ipt == 'e': #edit
+            pass
+
+        elif ipt == 'd': #delete
+            if parent != -1: #-1 as parent is the root node, shouldn't be deleted
+                tree.delete(node)
                 node = parent
 
+        elif ipt == -1: #go back
+            if parent != -1:
+                node = parent
+        
         else:
-            if children != []:
+            if children != []: #go forward to selected node
                 node = children[ipt]      
 
-        stdscr.clear()
-        stdscr.refresh()
+        win.clear()
+        win.refresh()
 
     curses.nocbreak()
-    stdscr.keypad(False)
+    win.keypad(False)
     curses.echo()
     curses.endwin()
