@@ -7,9 +7,13 @@ class Tree:
         for node in self.file.readlines():
             parameter = node.strip().split(",")
             if len(parameter) == 4:
-                self.node_dict[int(parameter[0])] = [parameter[1],parameter[2],[int(x) for x in parameter[3].split("|")]]
+                self.node_dict[int(parameter[0])] = [parameter[1],parameter[2],[int(x) for x in parameter[3].split("|")],None]
             elif len(parameter) == 3:
-                self.node_dict[int(parameter[0])] = [parameter[1],parameter[2],[]]
+                self.node_dict[int(parameter[0])] = [parameter[1],parameter[2],[],None]
+        for uid in self.node_dict.keys():
+            for key in self.node_dict.keys():
+                if uid in self.node_dict[key][2]:
+                    self.node_dict[uid][3] = key
 
     def node(self,uid,name=None,description=None,children=None):
         if uid in self.node_dict.keys():
@@ -19,15 +23,21 @@ class Tree:
                 description = self.node_dict[uid][1]
             if children == None:
                 children = self.node_dict[uid][2]
+            parent = self.node_dict[uid][3]
         else:
             children = []
-        self.node_dict[uid] = [name,description,children]
+            parent = None
+        self.node_dict[uid] = [name,description,children,parent]
 
     def move(self,uid,new_parent):
         for key in self.node_dict.keys():
             if uid in self.node_dict[key][2]:
                 self.node_dict[key][2].remove(uid)
         self.node_dict[new_parent][2].append(uid)
+        if len(self.node_dict[uid]) == 3:
+            self.node_dict[uid].append(new_parent)
+        else:
+            self.node_dict[uid][3] = new_parent
 
     def delete(self,uid):
         for key in self.node_dict.keys():
@@ -60,4 +70,4 @@ if __name__ == "__main__":
     print(a.node_dict)
     a.delete(1)
     print(a.node_dict)
-    a.close(save="saves/test.save")
+    a.close(save="saves/other.save")
