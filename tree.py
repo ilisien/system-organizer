@@ -30,11 +30,13 @@ class Tree:
         self.node_dict[new_parent][2].append(uid)
 
     def delete(self,uid):
-        del self.node_dict[uid]
         for key in self.node_dict.keys():
             if uid in self.node_dict[key][2]:
                 self.node_dict[key][2].remove(uid)
+                for child in self.node_dict[uid][2]:
+                    self.move(child,key)
                 break
+        del self.node_dict[uid]
 
     def close(self,save=None):
         self.file.close()
@@ -56,6 +58,6 @@ if __name__ == "__main__":
     a.node(3,name="new_node",description="a new node")
     a.move(3,1)
     print(a.node_dict)
-    a.delete(3)
+    a.delete(1)
     print(a.node_dict)
     a.close(save="saves/test.save")
