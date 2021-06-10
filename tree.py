@@ -23,29 +23,26 @@ class Tree:
                 description = self.node_dict[uid][1]
             if children == None:
                 children = self.node_dict[uid][2]
-            parent = self.node_dict[uid][3]
+            parent = self.parent(uid)
         else:
             children = []
             parent = None
         self.node_dict[uid] = [name,description,children,parent]
 
+    def parent(self,uid):
+        return self.node_dict[uid][3]
+
     def move(self,uid,new_parent):
-        for key in self.node_dict.keys():
-            if uid in self.node_dict[key][2]:
-                self.node_dict[key][2].remove(uid)
+        if self.parent(uid) is not None:
+            self.node_dict[self.parent(uid)][2].remove(uid)
         self.node_dict[new_parent][2].append(uid)
-        if len(self.node_dict[uid]) == 3:
-            self.node_dict[uid].append(new_parent)
-        else:
-            self.node_dict[uid][3] = new_parent
+        self.node_dict[uid][3] = new_parent
 
     def delete(self,uid):
-        for key in self.node_dict.keys():
-            if uid in self.node_dict[key][2]:
-                self.node_dict[key][2].remove(uid)
-                for child in self.node_dict[uid][2]:
-                    self.move(child,key)
-                break
+        if uid in self.node_dict[self.parent(uid)][2]:
+            self.node_dict[self.parent(uid)][2].remove(uid)
+            for child in self.node_dict[uid][2]:
+                self.move(child,self.parent(uid))
         del self.node_dict[uid]
 
     def close(self,save=None):
